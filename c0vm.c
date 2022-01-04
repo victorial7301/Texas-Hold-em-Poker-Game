@@ -1,7 +1,3 @@
-/**************************************************************************/
-/*              COPYRIGHT Carnegie Mellon University 2021                 */
-/* Do not post this file or any derivative on a public site or repository */
-/**************************************************************************/
 #include <assert.h>
 #include <stdio.h>
 #include <limits.h>
@@ -33,14 +29,11 @@ int execute(struct bc0_file *bc0) {
   size_t pc = 0;     /* Current location within the current byte array P */
   c0_value *V = xmalloc((bc0->function_pool[0].num_vars)*sizeof(c0_value));   /* Local variables (you won't need this till Task 2) */
 
-  /* The call stack, a generic stack that should contain pointers to frames */
-  /* You won't need this until you implement functions. */
   gstack_t callStack = stack_new();
 
   while (true) {
 
 #ifdef DEBUG
-    /* You can add extra debugging information here */
     fprintf(stderr, "Opcode %x -- Stack size: %zu -- PC: %zu\n",
             P[pc], c0v_stack_size(S), pc);
 #endif
@@ -71,11 +64,6 @@ int execute(struct bc0_file *bc0) {
       c0v_push(S, b);
       break;
     }
-
-    /* Returning from a function.
-     * This currently has a memory leak! You will need to make a slight
-     * change for the initial tasks to avoid leaking memory.  You will
-     * need to be revise it further when you write INVOKESTATIC. */
 
     case RETURN: {
       c0_value return_value = c0v_pop(S);
@@ -567,20 +555,6 @@ int execute(struct bc0_file *bc0) {
       }
       break;
     }
-
-    /* BONUS -- C1 operations */
-
-    case CHECKTAG:
-
-    case HASTAG:
-
-    case ADDTAG:
-
-    case ADDROF_STATIC:
-
-    case ADDROF_NATIVE:
-
-    case INVOKEDYNAMIC:
 
     default:
       fprintf(stderr, "invalid opcode: 0x%02x\n", P[pc]);
