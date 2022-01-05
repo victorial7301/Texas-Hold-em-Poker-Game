@@ -1,0 +1,79 @@
+def extendedEuclid(a, b):
+	if a == 0 :
+		return b, 0, 1		
+	GCD, x1, y1 = extendedEuclid(b % a, a)
+	x = y1 - (b // a) * x1
+	y = x1
+	return GCD, x, y
+
+def numberToBase(n, b):
+    if n == 0:
+        return [0]
+    digits = []
+    while n:
+        digits.append(int(n % b))
+        n //= b
+    return digits[::-1]
+
+def modularExponentiation(A, e, n):
+	# Base Cases
+	if (A == 0):
+		return 0
+	if (e == 0):
+		return 1
+	# If e is even
+	y = 0
+	if (e % 2 == 0):
+		y = modularExponentiation(A, e // 2, n)
+		y = (y * y) % n
+	# If e is ddd
+	else:
+		y = A % n
+		y = (y * modularExponentiation(A, e - 1, n)) % n
+	return y
+
+def numbersToStrings(n):
+    switcher = {
+        0: " ",
+        1: "a",
+        2: "b",
+        3: "c",
+        4: "d",
+        5: "e",
+        6: "f",
+        7: "g",
+        8: "h",
+        9: "i",
+        10: "j",
+        11: "k",
+        12: "l",
+        13: "m",
+        14: "n",
+        15: "o",
+        16: "p",
+        17: "q",
+        18: "r",
+        19: "s",
+        20: "t",
+        21: "u",
+        22: "v",
+        23: "w",
+        24: "x",
+        25: "y",
+        26: "z",
+    }
+    return switcher.get(n)
+
+def decrypt(p: int, q: int, e: int, c: int) -> str:
+    phi = (p - 1)*(q - 1)
+    (G, x, l) = extendedEuclid(phi, e)
+    inverse = l
+    while (inverse < 0):
+        inverse += phi
+    assert((inverse*e) % phi == 1)
+    m = modularExponentiation(c, inverse, p*q)
+    baseTwentySeven = numberToBase(m, 27)
+    mString = ""
+    for i in range(len(baseTwentySeven)):
+        mString += numbersToStrings(baseTwentySeven[i])
+    return mString
